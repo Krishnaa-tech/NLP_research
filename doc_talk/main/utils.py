@@ -72,7 +72,6 @@ def extract_proper_noun_phrases(text):
         for phrase in doc.noun_chunks
         if any(token.pos_ == 'PROPN' for token in phrase)
     ]
-
     return proper_noun_phrases
 
 
