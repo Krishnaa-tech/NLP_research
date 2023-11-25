@@ -1,0 +1,10 @@
+db.sqlite3
+
+nlp
+.env
+
+main/__pycache__/
+doc_talk/__pycache__/
+main/migrations/__pycache__/
+doc_talk/migrations/__pycache__/
+
