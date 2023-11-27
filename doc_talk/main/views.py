@@ -33,8 +33,11 @@ def document(request):
             error_message = "Unsupported file format. Please upload a PDF or a text file."
             return render(request, 'ner.html', {'error_message': error_message})
     else:
-        return render(request, 'ner.html')    
+        return render(request, 'main/ner.html')    
     
+def ner(request): 
+    return render(request, 'main/ner.html')
+
 
 def underline_words(request):
     input_text = ''
@@ -52,7 +55,7 @@ def underline_words(request):
 
         output_text = input_text  # You can modify this based on additional processing
 
-    return render(request, 'ner.html', {'input_text': input_text, 'output_text': output_text})
+    return render(request, 'main/ner.html', {'input_text': input_text, 'output_text': output_text})
 
 
     

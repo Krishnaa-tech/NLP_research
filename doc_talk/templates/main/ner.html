@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Underline Words</title>
+    <title>Named Entity Recognition</title>
     <!-- Include Bootstrap CSS (adjust the path if needed) -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -13,15 +14,17 @@
         }
     </style>
 </head>
+
 <body class="container mt-5">
-    <h2 class="mb-4">Underline Words</h2>
+    <h2 class="mb-4">Named Entity Recognition</h2>
 
     <!-- Form for pasting text -->
-    <form id="textForm" method="POST" action="{% url 'underline_words' %}">
+    <form id="textForm" method="POST" action="{% url 'word-underline' %}">
         {% csrf_token %}
         <div class="form-group">
             <label for="inputText">Paste Text:</label>
-            <textarea class="form-control" id="inputText" name="input_text" rows="4" placeholder="Paste your text here..." required></textarea>
+            <textarea class="form-control" id="inputText" name="input_text" rows="4"
+                placeholder="Paste your text here..." required></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Underline Words</button>
     </form>
@@ -29,51 +32,38 @@
     <hr>
 
     <!-- Form for uploading a file -->
-    <form id="fileForm" method="POST" action="{% url 'upload_file' %}" enctype="multipart/form-data">
+    <form id="fileForm" method="POST" action="{% url 'doc-upload' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
             <label for="fileInput">Upload File:</label>
-            <input type="file" class="form-control-file" id="fileInput" name="uploaded_file" accept=".txt, .pdf" required>
+            <input type="file" class="form-control-file" id="fileInput" name="uploaded_file" accept=".txt, .pdf"
+                required>
         </div>
         <button type="submit" class="btn btn-primary">Process File</button>
     </form>
 
     <!-- Display the result with underlined words -->
+    
     {% if input_text %}
-        <div class="mt-4">
-            <h5>Result:</h5>
-            <p>
-                {% for word, description in underlined_words.items %}
-                    {% if word in output_text %}
-                        {% with output_text|replace:word %}
-                            <span class="underlined">{{ word }}</span>
-                        {% endwith %}
-                    {% else %}
-                        {{ word }}
-                    {% endif %}
+    <div class="mt-4">
+        <h5>Result:</h5>
+        <p>
+            {% if output_text %}
+                <span class="underlined">{{ output_text|safe }}</span>
+            {% else %}
+                {{ input_text|safe }}
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
 
-                    <!-- Modal for word description -->
-                    <div class="modal fade" id="wordModal{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="wordModalLabel{{ forloop.counter }}" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="wordModalLabel{{ forloop.counter }}">Definition of {{ word }}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    {{ description }}
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </p>
-        </div>
+
+    <!-- Display the result for the document view -->
+    {% if text_content %}
+    <div class="mt-4">
+        <h5>Document Result:</h5>
+        <p>{{ text_content|safe }}</p>
+    </div>
     {% endif %}
 
     <!-- Include Bootstrap JS (adjust the path if needed) -->
@@ -81,4 +71,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
