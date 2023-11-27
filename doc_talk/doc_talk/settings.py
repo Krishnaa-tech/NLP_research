@@ -120,10 +120,4 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# settings.py
-
-
-
-# Load environment variables from .env file
-GENAI_API_KEY = config('API_KEY', default='', cast=str)
 
