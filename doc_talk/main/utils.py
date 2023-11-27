@@ -3,6 +3,7 @@
 # from datetime import datetime
 import re 
 import spacy
+from transformers import AutoTokenizer, PegasusForConditionalGeneration
 
 # Function to read PDF files and store the extracted text in a text file
 # def read_pdf(file_path):
@@ -26,6 +27,7 @@ import spacy
 #         print(f"Error while writing to the file: {e}")
 
         # Function to read text files and store the text in a variable
+        
 def read_text(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as txt_file:
@@ -78,3 +80,19 @@ def extract_proper_noun_phrases(text):
         if any(token.pos_ == 'PROPN' for token in phrase)
     ]
     return proper_noun_phrases
+
+
+def generate_summary(article_text):
+    # Load pre-trained model and tokenizer
+    model = PegasusForConditionalGeneration.from_pretrained("google/pegasus-xsum")
+    tokenizer = AutoTokenizer.from_pretrained("google/pegasus-xsum")
+
+    # Tokenize the input text
+    inputs = tokenizer(article_text, max_length=1024, return_tensors="pt")
+
+    # Generate Summary
+    summary_ids = model.generate(inputs["input_ids"])
+
+    # Decode and return the summary
+    summary = tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+    return summary
