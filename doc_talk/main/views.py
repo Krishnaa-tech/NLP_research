@@ -81,7 +81,6 @@ def underline_words(request):
     return render(request, 'main/ner.html', {'input_text': input_text, 'output_text': output_text})
 
 
-<<<<<<< HEAD
 # def generate_summary(article_text):
 #     # Load pre-trained model and tokenizer
 #     model = PegasusForConditionalGeneration.from_pretrained("google/pegasus-xsum")
@@ -125,7 +124,7 @@ genai.configure(api_key="AIzaSyBeKXOpP1-_Uuxl8BseTdR19uvlAnIbGlo")
 
 def generate_summary(request):
     text_input = request.POST.get('text_input', '')
-    print(f"Received text_input: {text_input}")
+    # print(f"Received text_input: {text_input}")
 
     defaults = {
         'model': 'models/text-bison-001',
@@ -158,71 +157,9 @@ def generate_summary(request):
     summary = response.result
 
     content = {'summary': summary}
-    print(f"Received text_input: {text_input}")
-    print(f"Generated summary: {summary}")
+    # print(f"Received text_input: {text_input}")
+    # print(f"Generated summary: {summary}")
 
     return render(request, 'summary.html', content)
 
 
-=======
-# def summarize_article(request, article_id):
-#     # Retrieve the article from the database
-#     article = Article.objects.get(pk=article_id)
-
-#     # Generate the summary using the function
-#     summary = utils.generate_summary(article.content)
-
-#     # Pass the summary to the template
-#     context = {'article': article, 'summary': summary}
-#     return render(request, 'main/ner.html', context)
-
-from django.shortcuts import render, redirect
-from .models import Article
-from .utils import generate_summary  # Assuming you have a utils module
-
-# def summarize_article(request):
-#     if request.method == 'POST' and request.FILES['uploaded_file']:
-#         uploaded_file = request.FILES['uploaded_file']
-
-#         # Read the content from the uploaded file
-#         file_content = uploaded_file.read().decode('utf-8')
-
-#         # Extract the first four words as the title
-#         title_words = file_content.split()[:4]
-#         title = ' '.join(title_words)
-
-#         # Create a new Article instance
-#         article = Article.objects.create(title=title, content=file_content)
-
-#         # Generate the summary using the function
-#         summary = generate_summary(file_content)
-
-#         # Pass the article and summary to the template
-#         context = {'article': article, 'summary': summary}
-#         return render(request, 'main/ner.html', context)
-#     else:
-#         # Handle the case where the request method is not POST or no file is uploaded
-#         return redirect('index')  # Redirect to the appropriate URL (replace 'index' with your URL name)
-
-def summarize_article(request):
-    if request.method == 'POST':
-        file_content = request.POST.get('file_content', '')
-
-        # Extract the first four words as the title
-        title_words = file_content.split()[:4]
-        title = ' '.join(title_words)
-
-        # # Create a new Article instance
-        # article = Article.objects.create(title=title, content=file_content)
-
-        # Generate the summary using the function
-        summary = utils.generate_summary(file_content)
-
-        # Pass the article and summary to the template
-        context = {'title': title, 'summary': summary}
-        return render(request, 'main/summarize.html', context)
-    else:
-        # Handle the case where the request method is not POST
-        # You can redirect to another URL or render a different template
-        return render(request, 'main/summarize.html')
->>>>>>> 4a69b6ec6cde9c999802cc7e51a63ba940c925c0
