@@ -65,6 +65,7 @@ def clean_text(text):
     return text
 
 def extract_proper_noun_phrases(text):
+    import spacy
     # Load the spaCy English language model
     nlp = spacy.load("en_core_web_sm")
     doc = nlp(text)
