@@ -145,5 +145,18 @@ def generate_summary(request):
     content = {'summary': summary}
     # print(f"Received text_input: {text_input}")
     # print(f"Generated summary: {summary}")
+    rouge_scores = calculate_rouge(text_input, summary)
+
+    print("Rouge-1 Precision:", rouge_scores['rouge1'].precision)
+    print("Rouge-1 Recall:", rouge_scores['rouge1'].recall)
+    print("Rouge-1 F1 Score:", rouge_scores['rouge1'].fmeasure)
+
+    print("Rouge-2 Precision:", rouge_scores['rouge2'].precision)
+    print("Rouge-2 Recall:", rouge_scores['rouge2'].recall)
+    print("Rouge-2 F1 Score:", rouge_scores['rouge2'].fmeasure)
+
+    print("Rouge-L Precision:", rouge_scores['rougeL'].precision)
+    print("Rouge-L Recall:", rouge_scores['rougeL'].recall)
+    print("Rouge-L F1 Score:", rouge_scores['rougeL'].fmeasure)
 
     return render(request, 'summary.html', content)
