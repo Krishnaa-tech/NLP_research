@@ -1,7 +1,13 @@
 from django.shortcuts import render
 from . import utils
-from .models import Article
+# from .models import Article
 from transformers import AutoTokenizer, PegasusForConditionalGeneration
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+import google.generativeai as genai
+import os
+from decouple import config
+
 
 # Create your views here:
 def home(request): 
@@ -75,19 +81,35 @@ def underline_words(request):
     return render(request, 'main/ner.html', {'input_text': input_text, 'output_text': output_text})
 
 
+# def generate_summary(article_text):
+#     # Load pre-trained model and tokenizer
+#     model = PegasusForConditionalGeneration.from_pretrained("google/pegasus-xsum")
+#     tokenizer = AutoTokenizer.from_pretrained("google/pegasus-xsum")
+
+#     # Tokenize the input text
+#     inputs = tokenizer(article_text, max_length=1024, return_tensors="pt")
+
+#     # Generate Summary
+#     summary_ids = model.generate(inputs["input_ids"])
+
+#     # Decode and return the summary
+#     summary = tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+#     return summary
+
 # def summarize_article(request, article_id):
 #     # Retrieve the article from the database
 #     article = Article.objects.get(pk=article_id)
 
 #     # Generate the summary using the function
-#     summary = utils.generate_summary(article.content)
+#     summary = generate_summary(article.content)
 
 #     # Pass the summary to the template
 #     context = {'article': article, 'summary': summary}
 #     return render(request, 'main/ner.html', context)
 
-from django.shortcuts import render
-from . import utils  # Assuming you have a utils module
+from django.shortcuts import render, redirect
+from .models import Article
+from .utils import generate_summary  # Assuming you have a utils module
 
 # def summarize_article(request):
 #     if request.method == 'POST' and request.FILES['uploaded_file']:
