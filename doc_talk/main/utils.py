@@ -83,7 +83,7 @@ def extract_proper_noun_phrases(text):
     return proper_noun_phrases
 
 
-def generate_summary(article_text):
+def generate_summary_ner(article_text):
     # Load pre-trained model and tokenizer
     model = PegasusForConditionalGeneration.from_pretrained("google/pegasus-xsum")
     tokenizer = AutoTokenizer.from_pretrained("google/pegasus-xsum")

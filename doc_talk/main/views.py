@@ -79,7 +79,7 @@ def summarize_for_ner(request):
         title = ' '.join(title_words)
 
         # Generate the summary using the function
-        summary = utils.generate_summary(file_content)
+        summary = utils.generate_summary_ner(file_content)
 
         # Pass the article and summary to the template
         context = {'title': title, 'summary': summary}
@@ -105,55 +105,55 @@ def summarize_for_ner(request):
 
 genai.configure(api_key="AIzaSyBeKXOpP1-_Uuxl8BseTdR19uvlAnIbGlo")
 
-def generate_summary(request):
-    text_input = request.POST.get('text_input', '')
-    # print(f"Received text_input: {text_input}")
+# def generate_summary(request):
+#     text_input = request.POST.get('text_input', '')
+#     # print(f"Received text_input: {text_input}")
 
-    defaults = {
-        'model': 'models/text-bison-001',
-        'temperature': 0.9,
-        'candidate_count': 1,
-        'top_k': 40,
-        'top_p': 0.95,
-        'max_output_tokens': 1024,
-        'stop_sequences': [],
-        'safety_settings': [
-            {"category": "HARM_CATEGORY_DEROGATORY", "threshold": 1},
-            {"category": "HARM_CATEGORY_TOXICITY", "threshold": 1},
-            {"category": "HARM_CATEGORY_VIOLENCE", "threshold": 2},
-            {"category": "HARM_CATEGORY_SEXUAL", "threshold": 2},
-            {"category": "HARM_CATEGORY_MEDICAL", "threshold": 2},
-            {"category": "HARM_CATEGORY_DANGEROUS", "threshold": 2},
-        ],
-    }
+#     defaults = {
+#         'model': 'models/text-bison-001',
+#         'temperature': 0.9,
+#         'candidate_count': 1,
+#         'top_k': 40,
+#         'top_p': 0.95,
+#         'max_output_tokens': 1024,
+#         'stop_sequences': [],
+#         'safety_settings': [
+#             {"category": "HARM_CATEGORY_DEROGATORY", "threshold": 1},
+#             {"category": "HARM_CATEGORY_TOXICITY", "threshold": 1},
+#             {"category": "HARM_CATEGORY_VIOLENCE", "threshold": 2},
+#             {"category": "HARM_CATEGORY_SEXUAL", "threshold": 2},
+#             {"category": "HARM_CATEGORY_MEDICAL", "threshold": 2},
+#             {"category": "HARM_CATEGORY_DANGEROUS", "threshold": 2},
+#         ],
+#     }
 
-    prompt = f"""Summarize this paragraph and detail some relevant context.
+#     prompt = f"""Summarize this paragraph and detail some relevant context.
 
-    Text: "{text_input}"""
+#     Text: "{text_input}"""
 
-    # Define response after the genai.generate_text call
-    response = genai.generate_text(
-        **defaults,
-        prompt=prompt
-    )
+#     # Define response after the genai.generate_text call
+#     response = genai.generate_text(
+#         **defaults,
+#         prompt=prompt
+#     )
 
-    summary = response.result
+#     summary = response.result
 
-    content = {'summary': summary}
-    # print(f"Received text_input: {text_input}")
-    # print(f"Generated summary: {summary}")
-    rouge_scores = calculate_rouge(text_input, summary)
+#     content = {'summary': summary}
+#     # print(f"Received text_input: {text_input}")
+#     # print(f"Generated summary: {summary}")
+#     rouge_scores = calculate_rouge(text_input, summary)
 
-    print("Rouge-1 Precision:", rouge_scores['rouge1'].precision)
-    print("Rouge-1 Recall:", rouge_scores['rouge1'].recall)
-    print("Rouge-1 F1 Score:", rouge_scores['rouge1'].fmeasure)
+#     print("Rouge-1 Precision:", rouge_scores['rouge1'].precision)
+#     print("Rouge-1 Recall:", rouge_scores['rouge1'].recall)
+#     print("Rouge-1 F1 Score:", rouge_scores['rouge1'].fmeasure)
 
-    print("Rouge-2 Precision:", rouge_scores['rouge2'].precision)
-    print("Rouge-2 Recall:", rouge_scores['rouge2'].recall)
-    print("Rouge-2 F1 Score:", rouge_scores['rouge2'].fmeasure)
+#     print("Rouge-2 Precision:", rouge_scores['rouge2'].precision)
+#     print("Rouge-2 Recall:", rouge_scores['rouge2'].recall)
+#     print("Rouge-2 F1 Score:", rouge_scores['rouge2'].fmeasure)
 
-    print("Rouge-L Precision:", rouge_scores['rougeL'].precision)
-    print("Rouge-L Recall:", rouge_scores['rougeL'].recall)
-    print("Rouge-L F1 Score:", rouge_scores['rougeL'].fmeasure)
+#     print("Rouge-L Precision:", rouge_scores['rougeL'].precision)
+#     print("Rouge-L Recall:", rouge_scores['rougeL'].recall)
+#     print("Rouge-L F1 Score:", rouge_scores['rougeL'].fmeasure)
 
-    return render(request, 'summary.html', content)
+#     return render(request, 'summary.html', content)
