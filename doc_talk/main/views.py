@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from . import utils
-# from .models import Article
 from transformers import AutoTokenizer, PegasusForConditionalGeneration
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import google.generativeai as genai
 import os
-from decouple import config
+from rouge_score import rouge_scorer
 
 
 # Create your views here:
@@ -28,20 +27,6 @@ def process_uploaded_file(uploaded_file_path):
     else:
         print("Unsupported file format. Please upload a PDF or a text file.")
         return None
-  
-# def document(request):
-#     if request.method == 'POST' and request.FILES['uploaded_file']:
-#         uploaded_file = request.FILES['uploaded_file']
-#         file_path = process_uploaded_file(uploaded_file)
-
-#         if file_path:
-#             text_content = process_uploaded_file(file_path)
-#             return render(request, 'ner.html', {'text_content': text_content})
-#         else:
-#             error_message = "Unsupported file format. Please upload a PDF or a text file."
-#             return render(request, 'ner.html', {'error_message': error_message})
-#     else:
-#         return render(request, 'main/ner.html')    
     
 def document(request):
     if request.method == 'POST' and request.FILES['uploaded_file']:
@@ -80,60 +65,10 @@ def underline_words(request):
 
     return render(request, 'main/ner.html', {'input_text': input_text, 'output_text': output_text})
 
-
-# def generate_summary(article_text):
-#     # Load pre-trained model and tokenizer
-#     model = PegasusForConditionalGeneration.from_pretrained("google/pegasus-xsum")
-#     tokenizer = AutoTokenizer.from_pretrained("google/pegasus-xsum")
-
-#     # Tokenize the input text
-#     inputs = tokenizer(article_text, max_length=1024, return_tensors="pt")
-
-#     # Generate Summary
-#     summary_ids = model.generate(inputs["input_ids"])
-
-#     # Decode and return the summary
-#     summary = tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
-#     return summary
-
-# def summarize_article(request, article_id):
-#     # Retrieve the article from the database
-#     article = Article.objects.get(pk=article_id)
-
-#     # Generate the summary using the function
-#     summary = generate_summary(article.content)
-
-#     # Pass the summary to the template
-#     context = {'article': article, 'summary': summary}
-#     return render(request, 'main/ner.html', context)
-
-from django.shortcuts import render, redirect
-from .models import Article
-from .utils import generate_summary  # Assuming you have a utils module
-
-# def summarize_article(request):
-#     if request.method == 'POST' and request.FILES['uploaded_file']:
-#         uploaded_file = request.FILES['uploaded_file']
-
-#         # Read the content from the uploaded file
-#         file_content = uploaded_file.read().decode('utf-8')
-
-#         # Extract the first four words as the title
-#         title_words = file_content.split()[:4]
-#         title = ' '.join(title_words)
-
-#         # Create a new Article instance
-#         article = Article.objects.create(title=title, content=file_content)
-
-#         # Generate the summary using the function
-#         summary = generate_summary(file_content)
-
-#         # Pass the article and summary to the template
-#         context = {'article': article, 'summary': summary}
-#         return render(request, 'main/ner.html', context)
-#     else:
-#         # Handle the case where the request method is not POST or no file is uploaded
-#         return redirect('index')  # Redirect to the appropriate URL (replace 'index' with your URL name)
+def calculate_rouge(reference, hypothesis):
+    scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
+    scores = scorer.score(reference, hypothesis)
+    return scores
 
 def summarize_article(request):
     if request.method == 'POST':
@@ -151,8 +86,64 @@ def summarize_article(request):
 
         # Pass the article and summary to the template
         context = {'title': title, 'summary': summary}
+
+         # Calculate Rouge scores
+        rouge_scores = calculate_rouge(file_content, summary)
+
+        print("Rouge-1 Precision:", rouge_scores['rouge1'].precision)
+        print("Rouge-1 Recall:", rouge_scores['rouge1'].recall)
+        print("Rouge-1 F1 Score:", rouge_scores['rouge1'].fmeasure)
+
+        print("Rouge-2 Precision:", rouge_scores['rouge2'].precision)
+        print("Rouge-2 Recall:", rouge_scores['rouge2'].recall)
+        print("Rouge-2 F1 Score:", rouge_scores['rouge2'].fmeasure)
+
+        print("Rouge-L Precision:", rouge_scores['rougeL'].precision)
+        print("Rouge-L Recall:", rouge_scores['rougeL'].recall)
+        print("Rouge-L F1 Score:", rouge_scores['rougeL'].fmeasure)
+
         return render(request, 'main/summarize.html', context)
     else:
-        # Handle the case where the request method is not POST
-        # You can redirect to another URL or render a different template
         return render(request, 'main/summarize.html')
+
+genai.configure(api_key="AIzaSyBeKXOpP1-_Uuxl8BseTdR19uvlAnIbGlo")
+
+def generate_summary(request):
+    text_input = request.POST.get('text_input', '')
+    # print(f"Received text_input: {text_input}")
+
+    defaults = {
+        'model': 'models/text-bison-001',
+        'temperature': 0.9,
+        'candidate_count': 1,
+        'top_k': 40,
+        'top_p': 0.95,
+        'max_output_tokens': 1024,
+        'stop_sequences': [],
+        'safety_settings': [
+            {"category": "HARM_CATEGORY_DEROGATORY", "threshold": 1},
+            {"category": "HARM_CATEGORY_TOXICITY", "threshold": 1},
+            {"category": "HARM_CATEGORY_VIOLENCE", "threshold": 2},
+            {"category": "HARM_CATEGORY_SEXUAL", "threshold": 2},
+            {"category": "HARM_CATEGORY_MEDICAL", "threshold": 2},
+            {"category": "HARM_CATEGORY_DANGEROUS", "threshold": 2},
+        ],
+    }
+
+    prompt = f"""Summarize this paragraph and detail some relevant context.
+
+    Text: "{text_input}"""
+
+    # Define response after the genai.generate_text call
+    response = genai.generate_text(
+        **defaults,
+        prompt=prompt
+    )
+
+    summary = response.result
+
+    content = {'summary': summary}
+    # print(f"Received text_input: {text_input}")
+    # print(f"Generated summary: {summary}")
+
+    return render(request, 'summary.html', content)
