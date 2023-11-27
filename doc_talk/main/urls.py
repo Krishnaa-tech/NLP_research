@@ -9,4 +9,5 @@ urlpatterns = [
     path("upload_doc",views.document , name = "doc-upload"),
     path("ner",views.underline_words , name = "word-underline"),
     path('main/generate_summary/', views.generate_summary, name='generate_summary'),
+    path('summary_ner', views.generate_summary, name='generate_summary_ner'),
 ]

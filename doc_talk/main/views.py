@@ -70,16 +70,13 @@ def calculate_rouge(reference, hypothesis):
     scores = scorer.score(reference, hypothesis)
     return scores
 
-def summarize_article(request):
+def summarize_for_ner(request):
     if request.method == 'POST':
         file_content = request.POST.get('file_content', '')
 
         # Extract the first four words as the title
         title_words = file_content.split()[:4]
         title = ' '.join(title_words)
-
-        # # Create a new Article instance
-        # article = Article.objects.create(title=title, content=file_content)
 
         # Generate the summary using the function
         summary = utils.generate_summary(file_content)
