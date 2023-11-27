@@ -42,7 +42,6 @@
         <button type="submit" class="btn btn-primary">Process File</button>
     </form>
 
-    <!-- Display the result with underlined words -->
     {% if input_text %}
     <div class="mb-4">
         <h5>Input Text:</h5>
@@ -53,7 +52,6 @@
     <!-- Display the result with clickable underlined words -->
     {% if output_text %}
     <div class="mb-4">
-        <h5>Result:</h5>
         <p>
             {% for word in output_text.split %}
             {% if word in words_to_underline_list %}
