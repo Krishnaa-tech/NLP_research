@@ -86,9 +86,8 @@ def underline_words(request):
 #     context = {'article': article, 'summary': summary}
 #     return render(request, 'main/ner.html', context)
 
-from django.shortcuts import render, redirect
-from .models import Article
-from .utils import generate_summary  # Assuming you have a utils module
+from django.shortcuts import render
+from . import utils  # Assuming you have a utils module
 
 # def summarize_article(request):
 #     if request.method == 'POST' and request.FILES['uploaded_file']:
