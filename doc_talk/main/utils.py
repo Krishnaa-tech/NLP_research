@@ -78,5 +78,3 @@ def extract_proper_noun_phrases(text):
         if any(token.pos_ == 'PROPN' for token in phrase)
     ]
     return proper_noun_phrases
-
-
