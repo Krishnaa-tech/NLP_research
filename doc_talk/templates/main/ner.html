@@ -12,12 +12,6 @@
         .underlined {
             text-decoration: underline;
         }
-
-        body {
-            margin: 0;
-            overflow: hidden;
-            cursor: pointer;
-        }
     </style>
 </head>
 
@@ -37,30 +31,18 @@
 
     <hr>
 
-    {% if input_text or output_text %}
+    <!-- Display the result with underlined words -->
+    {% if input_text %}
     <div class="mb-4">
-        <h5>Important Words to Note: </h5>
+        <h5>Important Words to Note Out: </h5>
         <p>{{ input_text|safe }}</p>
-
-        <!-- Display the result with clickable underlined words -->
-        {% if output_text %}
-        <p>
-            {% for word in output_text.split %}
-            {% if word in words_to_underline_list %}
-            <span class="underlined">{{ word }}</span>
-            {% else %}
-            {{ word }}
-            {% endif %}
-            {% endfor %}
-        </p>
-        {% endif %}
     </div>
     {% endif %}
+
 
     <!-- Include Bootstrap JS (adjust the path if needed) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
