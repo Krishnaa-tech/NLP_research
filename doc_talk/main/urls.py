@@ -8,6 +8,6 @@ urlpatterns = [
     path("notes", views.ner, name= "home-page"),
     path("upload_doc",views.document , name = "doc-upload"),
     path("ner",views.underline_words , name = "word-underline"),
-    # path('main/generate_summary/', views.generate_summary, name='generate_summary'),
+    path('main/generate_summary/', views.generate_summary, name='generate_summary'),
     path('summary_ner', views.summarize_for_ner, name='generate_summary_ner'),
 ]

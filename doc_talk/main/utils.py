@@ -95,5 +95,20 @@ def generate_summary_ner(article_text):
     summary_ids = model.generate(inputs["input_ids"])
 
     # Decode and return the summary
-    summary = tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
-    return summary
+    summary_ner = tokenizer.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+    return summary_ner
+
+# def summarize_article(file_content):
+#     title = ''
+#     summary_ner = ''
+
+#     # Extract the best suggestion (assuming suggestions are separated by newlines)
+#     suggestions = re.split(r'\n', file_content)
+#     best_suggestion = max(suggestions, key=len)
+
+#     # Generate summary for the best suggestion
+#     summary_ner = generate_summary_ner(best_suggestion)
+#     title = f"Summary for: {best_suggestion[:50]}..."  # Display the first 50 characters of the suggestion in the title
+
+#     return title, summary_ner
+

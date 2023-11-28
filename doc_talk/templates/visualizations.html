@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Summary</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h1 class="mb-4">Article Summary</h1>
+
+    <form id="textForm" method="POST" action="{% url 'generate_summary_ner' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="textContent">Paste Text:</label>
+            <textarea class="form-control" id="textContent" name="file_content" rows="8" placeholder="Paste your text here..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Summarize Article</button>
+    </form>
+
+    {% if title %}
+    <div class="mt-4">
+        <h2>Generated Summary:</h2>
+        <p><strong>{{ title }}</strong></p>
+        <p>{{ summary_ner }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Add Bootstrap JS and jQuery (adjust the paths if needed) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Summary</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h1 class="mb-4">Article Summary</h1>
+
+    <form id="textForm" method="POST" action="{% url 'summarize_article' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="textContent">Paste Text:</label>
+            <textarea class="form-control" id="textContent" name="file_content" rows="8" placeholder="Paste your text here..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Summarize Article</button>
+    </form>
+
+    {% if title %}
+    <div class="mt-4">
+        <h2>Generated Summary:</h2>
+        <p><strong>{{ title }}</strong></p>
+        <p>{{ summary_ner }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Add Bootstrap JS and jQuery (adjust the paths if needed) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+--- ner.html ------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Named Entity Recognition</title>
+    <!-- Include Bootstrap CSS (adjust the path if needed) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for underlined words */
+        .underlined {
+            text-decoration: underline;
+            cursor: pointer; /* Add cursor pointer for better UX */
+        }
+
+        .tooltip-content {
+            max-width: 300px;
+        }
+    </style>
+</head>
+
+<body class="container mt-5">
+    <h2 class="mb-4">Named Entity Recognition</h2>
+
+    <!-- Form for pasting text -->
+    <form id="textForm" method="POST" action="{% url 'word-underline' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputText">Paste Text:</label>
+            <textarea class="form-control" id="inputText" name="input_text" rows="4"
+                placeholder="Paste your text here..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Underline Words</button>
+    </form>
+
+    <hr>
+
+    <!-- Form for uploading a file -->
+    <form id="fileForm" method="POST" action="{% url 'doc-upload' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="fileInput">Upload File:</label>
+            <input type="file" class="form-control-file" id="fileInput" name="uploaded_file" accept=".txt, .pdf"
+                required>
+        </div>
+        <button type="submit" class="btn btn-primary">Process File</button>
+    </form>
+
+    {% if input_text %}
+    <div class="mb-4">
+        <h5>Input Text:</h5>
+        <p>{{ input_text|safe }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Display the result with clickable underlined words -->
+    {% if output_text %}
+    <div class="mb-4">
+        <p>
+            {% for word_info in word_reference %}
+                <span class="underlined" data-toggle="tooltip" data-html="true" title="{{ word_info.content }}"
+                    data-word="{{ word_info.word }}">
+                    {{ word_info.word }}
+                </span>
+            {% endfor %}
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Include Bootstrap JS (adjust the path if needed) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Add your custom JavaScript for tooltips -->
+    <script>
+        $(document).ready(function () {
+            // Enable Bootstrap tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Add hover event for underlined words
+            $('.underlined').hover(function () {
+                // Fetch summary data using AJAX when hovering over the underlined word
+                var word = $(this).data('word');
+                var tooltipContent = $(this).attr('title'); // You can replace this with an AJAX call to fetch summary
+
+                // Update tooltip content
+                $('.tooltip-inner').html(tooltipContent);
+            });
+        });
+    </script>
+</body>
+
+</html>
+ ------------------------------------------------------------------------
+
+ summarize.html
+
+ <!-- article_summary.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Summary</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add Plotly.js library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body class="container mt-5">
+    <h1 class="mb-4">Article Summary</h1>
+
+    <form id="textForm" method="POST" action="{% url 'summarize_for_ner' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="textContent">Paste Text:</label>
+            <textarea class="form-control" id="textContent" name="file_content" rows="8" placeholder="Paste your text here..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Summarize Article</button>
+    </form>
+
+    {% if title %}
+    <div class="mt-4">
+        <h2>Generated Summary:</h2>
+        <p><strong>{{ title }}</strong></p>
+        <p>{{ summary_ner }}</p>
+    </div>
+    {% endif %}
+
+    {% if rouge_scores %}
+    <div class="mt-4">
+        <h2>Rouge Scores:</h2>
+        <!-- Display a Plotly bar chart for Rouge scores -->
+        <div id="rouge-chart"></div>
+    </div>
+    {% endif %}
+
+    <!-- Add Bootstrap JS and jQuery (adjust the paths if needed) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Extract Rouge scores from the Django template variable
+        var rougeScores = {
+            'Rouge-1 Precision': {{ rouge_scores.rouge1.precision }},
+            'Rouge-1 Recall': {{ rouge_scores.rouge1.recall }},
+            'Rouge-1 F1 Score': {{ rouge_scores.rouge1.fmeasure }},
+            'Rouge-2 Precision': {{ rouge_scores.rouge2.precision }},
+            'Rouge-2 Recall': {{ rouge_scores.rouge2.recall }},
+            'Rouge-2 F1 Score': {{ rouge_scores.rouge2.fmeasure }},
+            'Rouge-L Precision': {{ rouge_scores.rougeL.precision }},
+            'Rouge-L Recall': {{ rouge_scores.rougeL.recall }},
+            'Rouge-L F1 Score': {{ rouge_scores.rougeL.fmeasure }},
+        };
+
+        // Define data for the Plotly bar chart
+        var data = [{
+            x: Object.keys(rougeScores),
+            y: Object.values(rougeScores),
+            type: 'bar',
+        }];
+
+        // Define layout for the Plotly chart
+        var layout = {
+            title: 'Rouge Scores',
+            xaxis: {
+                title: 'Metric',
+            },
+            yaxis: {
+                title: 'Score',
+            },
+        };
+
+        // Display the Plotly chart in the specified div
+        Plotly.newPlot('rouge-chart', data, layout);
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+    
+</body>
+</html>
