@@ -31,36 +31,11 @@
 
     <hr>
 
-    <!-- Form for uploading a file -->
-    <form id="fileForm" method="POST" action="{% url 'doc-upload' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="fileInput">Upload File:</label>
-            <input type="file" class="form-control-file" id="fileInput" name="uploaded_file" accept=".txt, .pdf"
-                required>
-        </div>
-        <button type="submit" class="btn btn-primary">Process File</button>
-    </form>
-
+    <!-- Display the result with underlined words -->
     {% if input_text %}
     <div class="mb-4">
-        <h5>Input Text:</h5>
+        <h5>Important Words to Note Out: </h5>
         <p>{{ input_text|safe }}</p>
-    </div>
-    {% endif %}
-
-    <!-- Display the result with clickable underlined words -->
-    {% if output_text %}
-    <div class="mb-4">
-        <p>
-            {% for word in output_text.split %}
-            {% if word in words_to_underline_list %}
-            <span class="underlined">{{ word }}</span>
-            {% else %}
-            {{ word }}
-            {% endif %}
-            {% endfor %}
-        </p>
     </div>
     {% endif %}
 
@@ -70,5 +45,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
