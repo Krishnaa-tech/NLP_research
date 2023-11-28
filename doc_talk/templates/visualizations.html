@@ -264,3 +264,72 @@
     
 </body>
 </html>
+
+
+
+----------------------------------------------ner.html
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Named Entity Recognition</title>
+    <!-- Include Bootstrap CSS (adjust the path if needed) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for underlined words */
+        .underlined {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body class="container mt-5">
+    <h2 class="mb-4">Named Entity Recognition</h2>
+
+    <!-- Form for pasting text -->
+    <form id="textForm" method="POST" action="{% url 'word-underline' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputText">Paste Text:</label>
+            <textarea class="form-control" id="inputText" name="input_text" rows="4"
+                placeholder="Paste your text here..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Underline Words</button>
+    </form>
+
+    <hr>
+
+    <!-- Display the result with underlined words -->
+    {% if input_text %}
+    <div class="mb-4">
+        <h5>Important Words to Note Out: </h5>
+        <p>{{ input_text|safe }}</p>
+    </div>
+    {% endif %}
+
+
+    <!-- Include Bootstrap JS (adjust the path if needed) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Enable Bootstrap tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Add hover event for underlined words
+            $('.underlined').hover(function () {
+                // Fetch summary data using AJAX when hovering over the underlined word
+                var word = $(this).data('word');
+                var tooltipContent = $(this).attr('title'); // You can replace this with an AJAX call to fetch summary
+
+                // Update tooltip content
+                $('.tooltip-inner').html(tooltipContent);
+            });
+        });
+    </script>
+</body>
+</html> -->

@@ -11,6 +11,34 @@
         /* Custom CSS for underlined words */
         .underlined {
             text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Style for word reference */
+        .word-reference {
+            margin-top: 20px;
+        }
+
+        .word-reference p {
+            margin-bottom: 10px;
+        }
+
+        /* Style for tooltips */
+        .tooltip-inner {
+            max-width: 300px;
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Style for loading message */
+        #loadingMessage {
+            display: none;
+            margin-top: 10px;
+            font-size: 18px;
+            color: #666;
         }
     </style>
 </head>
@@ -33,16 +61,106 @@
 
     <!-- Display the result with underlined words -->
     {% if input_text %}
-    <div class="mb-4">
-        <h5>Important Words to Note Out: </h5>
-        <p>{{ input_text|safe }}</p>
-    </div>
+        <div class="mb-4">
+            <h5>Important Words to Note Out: </h5>
+            <p>{{ input_text|safe }}</p>
+        </div>
     {% endif %}
 
+    <!-- Display underlined words with summaries -->
+    <div class="word-reference">
+        {% for entry in word_reference %}
+            <p class="underlined" data-toggle="tooltip" title="{{ entry.content }}">
+                <strong>{{ entry.word }}</strong><br>
+                <span class="summary-title">Summary:</span> <!-- Title for the summary -->
+            </p>
+        {% endfor %}
+    </div>
+
+    <!-- Form for generating summaries -->
+    <form id="summaryForm" method="POST" action="{% url 'generate_summary_ner' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button type="button" class="btn btn-primary" onclick="summarizeArticle()">Summarize Article</button>
+        <!-- Rouge Scores Graph Section -->
+        <div id="loadingMessage">Generating Summary...</div>
+        <div id="rouge-chart"></div>
+    </form>
 
     <!-- Include Bootstrap JS (adjust the path if needed) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Enable Bootstrap tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        // Function to show loading message when generating summary
+        function showLoadingMessage() {
+            $('#loadingMessage').show();
+        }
+
+        // Function to summarize the article
+        function summarizeArticle() {
+            // Show the loading message
+            showLoadingMessage();
+
+            // Get the content of the textarea
+            var fileContent = $('#textContent').val();
+
+            // Get the words reference data
+            var wordReference = $('.word-reference .underlined');
+
+            // Recursive function to process each word reference
+            function processWordReference(index) {
+                if (index < wordReference.length) {
+                    var currentWord = $(wordReference[index]);
+                    var word = currentWord.text().trim();
+                    var content = currentWord.attr('title');
+
+                    // Prepare the data to be sent with the AJAX request
+                    var requestData = {
+                        'file_content': fileContent,
+                        'word_reference': JSON.stringify([{ word: word, content: content }]),
+                        'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+                    };
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        type: 'POST',
+                        url: $('#summaryForm').attr('action'),
+                        data: requestData,
+                        success: function (response) {
+                            // Handle the response here if needed
+                            console.log(response);
+
+                            // Display the summary
+                            currentWord.find('.summary-title').after('<div class="summary-content">' + response.summary + '</div>');
+
+                            // Process the next word reference
+                            processWordReference(index + 1);
+                        },
+                        error: function (error) {
+                            // Handle errors here if needed
+                            console.error(error);
+
+                            // Process the next word reference
+                            processWordReference(index + 1);
+                        },
+                        complete: function () {
+                            // Hide the loading message after processing all word references
+                            if (index === wordReference.length - 1) {
+                                $('#loadingMessage').hide();
+                            }
+                        },
+                    });
+                }
+            }
+
+            // Start processing word references from index 0
+            processWordReference(0);
+        }
+    </script>
 </body>
 </html>

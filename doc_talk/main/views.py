@@ -132,6 +132,30 @@ def get_wikipedia_content(keyword):
     article = get_wikipedia_article_by_keyword(keyword)
     return f"\nTitle: {article['title']}\nContent: {article['content']}"
 
+# def underline_words(request):
+#     input_text = ''
+#     output_text = ''
+#     word_reference = []
+
+#     if request.method == 'POST':
+#         input_text = request.POST.get('input_text', '')
+
+#         # Extract proper noun phrases
+#         words_to_underline_list = utils.extract_proper_noun_phrases(input_text)
+
+#         # Underline specified words in the text and fetch Wikipedia content
+#         for word in words_to_underline_list:
+#             input_text = input_text.replace(word, f'<u data-toggle="tooltip" title="Loading summary..." class="underlined" data-word="{word}">{word}</u>')
+
+#             # Get Wikipedia content for each underlined word
+#             article = get_wikipedia_article_by_keyword(word)
+
+#             word_reference.append({'word': word, 'content': article['content']})
+#             print(word_reference)
+#         output_text = input_text
+
+#     return render(request, 'main/ner.html', {'input_text': input_text, 'output_text': output_text, 'word_reference': word_reference})
+
 def underline_words(request):
     input_text = ''
     output_text = ''
@@ -145,15 +169,26 @@ def underline_words(request):
 
         # Underline specified words in the text and fetch Wikipedia content
         for word in words_to_underline_list:
-            input_text = input_text.replace(word, f'<u data-toggle="tooltip" title="Loading summary..." class="underlined" data-word="{word}">{word}</u>')
+            input_text = input_text.replace(
+                word,
+                f'<u data-toggle="tooltip" title="Loading summary..." class="underlined" data-word="{word}">{word}</u>'
+            )
 
             # Get Wikipedia content for each underlined word
             article = get_wikipedia_article_by_keyword(word)
-            word_reference.append({'word': word, 'content': article['content']})
+
+            # Check if the content is available
+            if 'content' in article and article['content']:
+                word_reference.append({'word': word, 'content': article['content']})
+            else:
+                # Handle the case where content is not available
+                word_reference.append({'word': word, 'content': 'No content available.'})
 
         output_text = input_text
 
     return render(request, 'main/ner.html', {'input_text': input_text, 'output_text': output_text, 'word_reference': word_reference})
+
+
 
 def calculate_rouge(reference, hypothesis):
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
@@ -161,38 +196,6 @@ def calculate_rouge(reference, hypothesis):
     return scores
 
 
-def summarize_for_ner(request):
-    if request.method == 'POST':
-        file_content = request.POST.get('file_content', '')
-
-        # Extract the first four words as the title
-        title_words = file_content.split()[:4]
-        title = ' '.join(title_words)
-
-        # Generate the summary using the function
-        summary_ner = utils.generate_summary_ner(file_content)
-
-        # Pass the article and summary to the template
-        context = {'summary': summary_ner, 'rouge_scores': rouge_scores}
-
-         # Calculate Rouge scores
-        rouge_scores = calculate_rouge(file_content, summary_ner)
-
-        print("Rouge-1 Precision:", rouge_scores['rouge1'].precision)
-        print("Rouge-1 Recall:", rouge_scores['rouge1'].recall)
-        print("Rouge-1 F1 Score:", rouge_scores['rouge1'].fmeasure)
-
-        print("Rouge-2 Precision:", rouge_scores['rouge2'].precision)
-        print("Rouge-2 Recall:", rouge_scores['rouge2'].recall)
-        print("Rouge-2 F1 Score:", rouge_scores['rouge2'].fmeasure)
-
-        print("Rouge-L Precision:", rouge_scores['rougeL'].precision)
-        print("Rouge-L Recall:", rouge_scores['rougeL'].recall)
-        print("Rouge-L F1 Score:", rouge_scores['rougeL'].fmeasure)
-
-        return render(request, 'main/summarize.html', context)
-    else:
-        return render(request, 'main/summarize.html')
 def summarize_for_ner(request):
     if request.method == 'POST':
         file_content = request.POST.get('file_content', '')
@@ -257,7 +260,7 @@ genai.configure(api_key="AIzaSyBeKXOpP1-_Uuxl8BseTdR19uvlAnIbGlo")
 
 def generate_summary(request):
     text_input = request.POST.get('text_input', '')
-    # print(f"Received text_input: {text_input}")
+    print(f"Received text_input: {text_input}")
 
     defaults = {
         'model': 'models/text-bison-001',
@@ -289,8 +292,8 @@ def generate_summary(request):
 
     summary_genai = response.result
 
-    # print(f"Received text_input: {text_input}")
-    # print(f"Generated summary: {summary}")
+    print(f"Received text_input\n: {text_input}")
+    print(f"Generated summary\n: {summary_genai}")
     # Calculate Rouge scores
     rouge_scores = calculate_rouge(text_input, summary_genai)
 

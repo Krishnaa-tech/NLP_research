@@ -57,7 +57,6 @@
             white-space: pre-line;
         }
 
-
         #loadingMessage {
             margin-top: 20px;
             font-size: 18px;
@@ -84,13 +83,9 @@
             <br>
             <button type="submit">Generate Summary</button>
             <br>
-            <!-- <input id="summaryResult" name="summary_result" type="text" placeholder="Summary" value="{{ summary_genai }}"> -->
-            <textarea id="summaryResult" name="summary_result" placeholder="Summary">{{ summary_genai }}</textarea>
-
-
-            <div id="loadingMessage">
-                <p id="loadingText">Summary is getting generated...</p>
-            </div>
+            <input id="summaryResult" name="summary_result" type="text" placeholder="Summary"
+                value="{{ summary_genai }}">
+            <div id="loadingMessage"></div>
 
             <!-- Rouge Scores Graph Section -->
             <div id="rouge-graph"></div>
@@ -133,9 +128,6 @@
             var layout = { barmode: 'group', title: 'Rouge Scores' };
 
             Plotly.newPlot('rouge-graph', data, layout);
-            setTimeout(function () {
-                document.getElementById('loadingText').style.display = 'none';
-            }, 2000);
         </script>
     </div>
 </body>

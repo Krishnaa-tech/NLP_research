@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TextSummarizerHub.io</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <!-- <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css"> -->
     <!-- FONT AWESOME ICONS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
     <!-- GOOGLE FONTS -->
@@ -32,88 +32,89 @@
             <div class="hero">
                 <h1>Services Offered by Us</h1>
                 <p>
-                    <span class = "highlight">TextSummarizerHub is a Django-based web application that empowers users to quickly and efficiently
-                    summarize textual content. Whether you need concise summaries for articles, documents, or any
-                    text-based content, TextSummarizerHub provides a user-friendly platform. It leverages advanced
-                    natural language processing techniques to generate accurate and meaningful summaries, making
-                    information consumption more accessible and time-efficient. With TextSummarizerHub, streamline your
-                    reading experience and stay informed effortlessly.
-                    <br></p>
+                    <span class="highlight">TextSummarizerHub is a Django-based web application that empowers users to
+                        quickly and efficiently
+                        summarize textual content. Whether you need concise summaries for articles, documents, or any
+                        text-based content, TextSummarizerHub provides a user-friendly platform. It leverages advanced
+                        natural language processing techniques to generate accurate and meaningful summaries, making
+                        information consumption more accessible and time-efficient. With TextSummarizerHub, streamline
+                        your
+                        reading experience and stay informed effortlessly.
+                        <br>
+                </p>
 
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6" style="text-align: center; text-justify: inter-word;">
-                            <button type="button" class="btn btn-dark btn-lg" style="font-family:
-                                 Helvetica; font-weight: bold;">Summarize Text</button>
+                            <a href="{% url 'generate_summary' %}" class="btn btn-dark btn-lg" style="font-family: Helvetica; font-weight: bold; padding: 10px 20px; color: white;">Summarize Text</a>
                         </div>
-
+                
                         <div class="col-md-6" style="text-align: center;">
-                            <button type="button" class="btn btn-dark btn-lg" style="font-family:
-                                Helvetica; font-weight: bold;">Make Notes </button>
-                            <a href="#arrow-link"></a>
+                            <a href="{% url 'word-underline' %}" class="btn btn-dark btn-lg" style="font-family: Helvetica; font-weight: bold; padding: 10px 20px; color: white;">Make Notes</a>
                         </div>
                     </div>
                 </div>
 
-                    <div class="services-block-box">
-                        <i class="fa fa-tablet fa-3x" aria-hidden="true"></i>
-                        <h3>Best NLP Pre-Trained Models</h3>
-                        <p>We are using Google's most optimum APIGenerative AI to provide you with the best
-                            service.</p>
-                    </div>
+                <div class="services-block-box">
+                    <i class="fa fa-tablet fa-3x" aria-hidden="true"></i>
+                    <h3>Best NLP Pre-Trained Models</h3>
+                    <p>We are using Google's most optimum <strong>Palm API</strong> Generative AI to provide you with
+                        the best
+                        service.</p>
+                </div>
 
 
-                    <div class="services-block-box">
-                        <i class="fa fa-bookmark-o fa-3x" aria-hidden="true"></i>
-                        <h3>Optimizing Note-Making</h3>
-                        <p>Highlight important entities to ensure you grasp the full meanings of texts you give us.</p>
-                    </div>
+                <div class="services-block-box">
+                    <i class="fa fa-bookmark-o fa-3x" aria-hidden="true"></i>
+                    <h3>Optimizing Note-Making</h3>
+                    <p>Highlight important entities to ensure you grasp the full meanings of texts you give us.</p>
+                </div>
 
 
-                    <div class="services-block-box">
-                        <i class="fa fa-folder-o fa-3x" aria-hidden="true"></i>
-                        <h3>Optimum Service Free of Cost</h3>
-                        <p>We treat you as premium at no extra cost."Atithi Devo Bhava"</p>
-                    </div>
-                
+                <div class="services-block-box">
+                    <i class="fa fa-folder-o fa-3x" aria-hidden="true"></i>
+                    <h3>Optimum Service Free of Cost</h3>
+                    <p>We treat you as premium at no extra cost."Atithi Devo Bhava"</p>
+                </div>
+
 
                 <div class="container">
                     <div class="h-p-group">
-                        <h2 style = "text-align: center;">Our team</h2>
-                </div>
+                        <h2 style="text-align: center;">Our team</h2>
+                    </div>
 
-                        <div class="team-block">
-                            <img src="http://bit.ly/2AAE5rf" alt="pic1-of-team-member.png">
-                            <h4>Joan Job</h4>
-                            <h5>UI Designer and PM</h5>
-                            <p>CHRIST (Deemed to Be University) Pune-Lavasa Campus</p>
-                            <ul>
-                                <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="team-block">
-                            <img src="http://bit.ly/2AxnyX5" alt="pic2-of-team-member.png">
-                            <h4>Krish Goyal</h4>
-                            <h5>Backend Developer and PM</h5>
-                            <p>CHRIST (Deemed to Be University) Pune-Lavasa Campus</p>
-                            <ul>
-                                <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                            </ul>
-                        </div>
+                    <div class="team-block">
+                        <img src="http://bit.ly/2AAE5rf" alt="pic1-of-team-member.png">
+                        <h4>Joan Job</h4>
+                        <h5>UI Designer and PM</h5>
+                        <p>CHRIST (Deemed to Be University) Pune-Lavasa Campus</p>
+                        <ul>
+                            <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="team-block">
+                        <img src="http://bit.ly/2AxnyX5" alt="pic2-of-team-member.png">
+                        <h4>Krish Goyal</h4>
+                        <h5>Backend Developer and PM</h5>
+                        <p>CHRIST (Deemed to Be University) Pune-Lavasa Campus</p>
+                        <ul>
+                            <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                        </ul>
                     </div>
                 </div>
-
             </div>
+
         </div>
+    </div>
 
 
     </div>
 
-<!-- 
+    <!-- 
 
     <footer id="footer">
         <div class="footer-container">
@@ -151,10 +152,10 @@
 
 
         /* GENERAL STYLING */
-        
+
         .highlight {
-        color: black;
-        font-weight: bolder;
+            color: black;
+            font-weight: bolder;
         }
 
         ul {
@@ -378,7 +379,7 @@
 
         .services-block-box .fa-tablet,
         .services-block-box .fa-lemon-o {
-            margin-right: 25px; 
+            margin-right: 25px;
         }
 
         .services-block-box .fa-folder-o {
