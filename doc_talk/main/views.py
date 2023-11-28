@@ -160,6 +160,39 @@ def calculate_rouge(reference, hypothesis):
     scores = scorer.score(reference, hypothesis)
     return scores
 
+
+def summarize_for_ner(request):
+    if request.method == 'POST':
+        file_content = request.POST.get('file_content', '')
+
+        # Extract the first four words as the title
+        title_words = file_content.split()[:4]
+        title = ' '.join(title_words)
+
+        # Generate the summary using the function
+        summary_ner = utils.generate_summary_ner(file_content)
+
+        # Pass the article and summary to the template
+        context = {'summary': summary_ner, 'rouge_scores': rouge_scores}
+
+         # Calculate Rouge scores
+        rouge_scores = calculate_rouge(file_content, summary_ner)
+
+        print("Rouge-1 Precision:", rouge_scores['rouge1'].precision)
+        print("Rouge-1 Recall:", rouge_scores['rouge1'].recall)
+        print("Rouge-1 F1 Score:", rouge_scores['rouge1'].fmeasure)
+
+        print("Rouge-2 Precision:", rouge_scores['rouge2'].precision)
+        print("Rouge-2 Recall:", rouge_scores['rouge2'].recall)
+        print("Rouge-2 F1 Score:", rouge_scores['rouge2'].fmeasure)
+
+        print("Rouge-L Precision:", rouge_scores['rougeL'].precision)
+        print("Rouge-L Recall:", rouge_scores['rougeL'].recall)
+        print("Rouge-L F1 Score:", rouge_scores['rougeL'].fmeasure)
+
+        return render(request, 'main/summarize.html', context)
+    else:
+        return render(request, 'main/summarize.html')
 def summarize_for_ner(request):
     if request.method == 'POST':
         file_content = request.POST.get('file_content', '')
@@ -192,7 +225,6 @@ def summarize_for_ner(request):
         return render(request, 'main/summarize.html', context)
     else:
         return render(request, 'main/summarize.html')
-
 
 
 genai.configure(api_key="AIzaSyBeKXOpP1-_Uuxl8BseTdR19uvlAnIbGlo")
