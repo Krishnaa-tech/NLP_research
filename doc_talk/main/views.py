@@ -289,7 +289,6 @@ def generate_summary(request):
 
     summary_genai = response.result
 
-    content = {'summary': summary_genai}
     # print(f"Received text_input: {text_input}")
     # print(f"Generated summary: {summary}")
     # Calculate Rouge scores
